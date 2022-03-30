@@ -23,7 +23,7 @@ public class LoadDataJSON {
 
 	private static JSONObject loadJsonFile() {
 
-		String url = "C:\\Users\\chedi\\Desktop\\openclassrooms\\SafetyNetAlerts\\src\\main\\resources\\data.json";
+		String url = "C:\\Users\\chedi\\Desktop\\openclassrooms\\safetynetalertsP5\\src\\main\\resources\\data.json";
 		try {
 
 			JSONParser jsonParser = new JSONParser();
@@ -66,22 +66,24 @@ public class LoadDataJSON {
 		}
 
 		JSONArray jsonArrayMedicalRecords = (JSONArray) jsonObject.get("medicalrecords");
-		List<String> listMed = new ArrayList<String>();
-		List<String> listAllergies = new ArrayList<String>();
 		for (Object med : jsonArrayMedicalRecords) {
+
 			JSONObject jsonMedicalRecord = (JSONObject) med;
 			String fn = (String) jsonMedicalRecord.get("firstName");
 			String ln = (String) jsonMedicalRecord.get("lastName");
 			String bd = (String) jsonMedicalRecord.get("birthdate");
 			JSONArray medications = (JSONArray) jsonMedicalRecord.get("medications");
 			JSONArray allergies = (JSONArray) jsonMedicalRecord.get("allergies");
+			List<String> listAllergies = new ArrayList<String>();
+			List<String> listMed = new ArrayList<String>();
 			for (Object m : medications) {
 				listMed.add((String) m);
 			}
+
 			for (Object a : allergies) {
 				listAllergies.add((String) a);
 			}
-			MedicalRecord medicalRecord = new MedicalRecord(fn, ln, bd, medications, allergies);
+			MedicalRecord medicalRecord = new MedicalRecord(fn, ln, bd, listMed, listAllergies);
 			listMedicalrecords.add(medicalRecord);
 
 		}
