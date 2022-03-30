@@ -55,7 +55,7 @@ public class SaveDataJSON {
 		obj.put("medicalrecords", jsonArrayMedicalRecords);
 		try {
 			FileWriter file = new FileWriter(
-					"C:\\Users\\chedi\\Desktop\\openclassrooms\\SafetyNetAlerts\\src\\main\\resources\\data.json",
+					"C:\\Users\\chedi\\Desktop\\openclassrooms\\safetynetalertsP5\\src\\main\\resources\\data.json",
 					false);
 			file.write(obj.toJSONString());
 
