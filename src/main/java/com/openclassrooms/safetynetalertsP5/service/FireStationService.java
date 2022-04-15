@@ -14,18 +14,21 @@ public class FireStationService {
 	@Autowired
 	private FireStationRepository fireStationRepository;
 
+	/** Endpoint de POST /firestation **/
 	public FireStation addFireStation(FireStation firestation) {
 		return fireStationRepository.save(firestation);
 
 	}
 
+	/** Endpoint de PUT /firestation **/
 	public FireStation updateFireStation(FireStation firestation) {
 		return fireStationRepository.updateByAddress(firestation);
 
 	}
 
-	public void deleteFireStation(String address) {
-		fireStationRepository.deleteByAddress(address);
+	/** Endpoint de DELETE /firestation **/
+	public FireStation deleteFireStation(String address) {
+		return fireStationRepository.deleteByAddress(address);
 
 	}
 

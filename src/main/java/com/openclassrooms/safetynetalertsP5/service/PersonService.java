@@ -13,18 +13,21 @@ public class PersonService {
 	@Autowired
 	private PersonRepository personRepository;
 
+	/** Endpoint de POST /person **/
 	public Person addPerson(Person person) {
 		return personRepository.save(person);
 
 	}
 
+	/** Endpoint de PUT /person **/
 	public Person updatePerson(Person person) {
 		return personRepository.updateByFirstNameAndLastName(person);
 
 	}
 
-	public void deletePerson(String fn, String ln) {
-		personRepository.deleteByFirstNameAndLastName(fn, ln);
+	/** Endpoint de DELETE /person **/
+	public Person deletePerson(String fn, String ln) {
+		return personRepository.deleteByFirstNameAndLastName(fn, ln);
 
 	}
 
@@ -32,8 +35,8 @@ public class PersonService {
 		return personRepository.findAll();
 	}
 
-	public Person getPerson(String fn) {
-		return personRepository.findByFirstName(fn);
+	public Person getPerson(String fn, String ln) {
+		return personRepository.findPersonByFirstNameAndLastName(fn, ln);
 	}
 
 }

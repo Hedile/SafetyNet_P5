@@ -13,6 +13,7 @@ public class MedicalRecordService {
 	@Autowired
 	private MedicalRecordRepository medicalrecordRepository;
 
+	/** Endpoint de POST /medicalRecord **/
 	public MedicalRecord addMedicalRecord(MedicalRecord medicalrecord) {
 		return medicalrecordRepository.save(medicalrecord);
 
@@ -23,8 +24,13 @@ public class MedicalRecordService {
 
 	}
 
-	public void deleteMedicalRecord(String fn, String ln) {
-		medicalrecordRepository.deleteByFirstNameAndLastName(fn, ln);
+	/**
+	 * Endpoint de DELETE /medicalRecord
+	 * 
+	 * @return
+	 **/
+	public MedicalRecord deleteMedicalRecord(String fn, String ln) {
+		return medicalrecordRepository.deleteByFirstNameAndLastName(fn, ln);
 
 	}
 
@@ -32,7 +38,7 @@ public class MedicalRecordService {
 		return medicalrecordRepository.findAll();
 	}
 
-	public MedicalRecord getMedicalRecord(String mr) {
-		return medicalrecordRepository.findByFirstName(mr);
+	public MedicalRecord getMedicalRecord(String fn, String ln) {
+		return medicalrecordRepository.findByFirstNameAndLastName(fn, ln);
 	}
 }
