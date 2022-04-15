@@ -31,14 +31,14 @@ public class SaveDataJSON {
 			objPerson.put("phone", p.getPhone());
 			objPerson.put("email", p.getEmail());
 			jsonArrayPersons.add(objPerson);
-			System.out.println(objPerson);
+			// System.out.println(objPerson);
 		}
 		for (FireStation f : LoadDataJSON.listFirestations) {
 			JSONObject objFireStation = new JSONObject();
 			objFireStation.put("address", f.getAddress());
 			objFireStation.put("station", f.getStation());
 			jsonArrayFireStations.add(objFireStation);
-			System.out.println(objFireStation);
+			// System.out.println(objFireStation);
 		}
 		for (MedicalRecord m : LoadDataJSON.listMedicalrecords) {
 			JSONObject objMedicalRecord = new JSONObject();
@@ -48,7 +48,7 @@ public class SaveDataJSON {
 			objMedicalRecord.put("medications", m.getMedications());
 			objMedicalRecord.put("allergies", m.getAllergies());
 			jsonArrayMedicalRecords.add(objMedicalRecord);
-			System.out.println(objMedicalRecord);
+			// System.out.println(objMedicalRecord);
 		}
 		obj.put("persons", jsonArrayPersons);
 		obj.put("firestations", jsonArrayFireStations);

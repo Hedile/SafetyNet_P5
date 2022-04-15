@@ -5,6 +5,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,6 +22,7 @@ public class LoadDataJSON {
 	public static ArrayList<Person> listPersons = new ArrayList<Person>();
 	public static List<FireStation> listFirestations = new ArrayList<FireStation>();
 	public static List<MedicalRecord> listMedicalrecords = new ArrayList<MedicalRecord>();
+	private static final Logger logger = LogManager.getLogger("LoadDataJSON");
 
 	private static JSONObject loadJsonFile() {
 
@@ -28,10 +31,12 @@ public class LoadDataJSON {
 
 			JSONParser jsonParser = new JSONParser();
 			Reader reader = new FileReader(url);
-
 			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+			logger.debug("loadJsonFile success");
 			return jsonObject;
 		} catch (Exception e) {
+
+			logger.error("loadJsonFile has failed");
 			e.printStackTrace();
 		}
 
