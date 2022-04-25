@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 public class SafetynetalertsP5Application {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		LoadDataJSON.loadData();
 		SpringApplication.run(SafetynetalertsP5Application.class, args);
 	}

@@ -10,8 +10,16 @@ import com.openclassrooms.safetynetalertsP5.repository.PersonRepository;
 
 @Service
 public class PersonService {
+
 	@Autowired
 	private PersonRepository personRepository;
+
+	/**
+	 * 
+	 */
+	public PersonService() {
+		super();
+	}
 
 	/** Endpoint de POST /person **/
 	public Person addPerson(Person person) {

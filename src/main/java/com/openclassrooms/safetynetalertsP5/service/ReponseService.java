@@ -23,7 +23,7 @@ public class ReponseService {
 	}
 
 	/** Endpoint de childAlert?address=<address> **/
-	public Children childrenByAddressAnotherMethod(String address) {
+	public Children childrenByAddress(String address) {
 		return reponseRepository.childrenByAddress(address);
 	}
 

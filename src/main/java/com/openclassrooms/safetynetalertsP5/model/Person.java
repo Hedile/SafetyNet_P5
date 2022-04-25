@@ -16,14 +16,6 @@ public class Person {
 	public Person() {
 	}
 
-	public Person(String firstName, String lastName, String address, String phone) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.address = address;
-		this.phone = phone;
-	}
-
 	public Person(String firstName, String lastName, String address, String city, String zip, String phone,
 			String email) {
 
@@ -34,18 +26,6 @@ public class Person {
 		this.zip = zip;
 		this.phone = phone;
 		this.email = email;
-	}
-
-	/**
-	 * @param firstName
-	 * @param lastName
-	 * @param phone
-	 */
-	public Person(String firstName, String lastName, String phone) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.phone = phone;
 	}
 
 	public String getFirstName() {

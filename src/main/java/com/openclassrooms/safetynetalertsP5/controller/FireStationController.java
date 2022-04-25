@@ -3,7 +3,6 @@ package com.openclassrooms.safetynetalertsP5.controller;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.openclassrooms.safetynetalertsP5.exceptions.NotFoundException;
 import com.openclassrooms.safetynetalertsP5.model.FireStation;
 import com.openclassrooms.safetynetalertsP5.service.FireStationService;
 
@@ -28,34 +28,21 @@ public class FireStationController {
 
 	private static final Logger logger = LogManager.getLogger("FireStationService");
 
-	public FireStationController(FireStationService fireStationService) {
-		this.fireStationService = fireStationService;
+	public FireStationController() {
+		super();
 	}
 
-	/** Endpoint Get /firestation **/
-	/*
-	 * @GetMapping("/Firestations") public List<FireStation> getAllFireStations() {
-	 * logger.info("Get/Firestations"); List<FireStation> firestations =
-	 * fireStationService.getAllFireStations(); if (firestations != null) {
-	 * logger.info("Get ok"); return firestations; } else {
-	 * logger.error("firestations Not found"); return null; } }
-	 * 
-	 * 
-	 * @GetMapping(value = "/Firestations/{Address}") public FireStation
-	 * getFireStationByAddress(@PathVariable("Address") String address) { return
-	 * fireStationService.getFireStation(address); }
-	 */
 	/** Endpoint POST /firestation **/
 	@PostMapping(value = "/Firestations")
 	public ResponseEntity<FireStation> createFirestation(@RequestBody FireStation firestation) {
 		FireStation addedFireStation = fireStationService.addFireStation(firestation);
-		if (Objects.isNull(addedFireStation)) {
-			logger.error("Fire station is not created");
+		if (addedFireStation == null) {
+			logger.error("Failed create Firestation");
 			return ResponseEntity.noContent().build();
 		}
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{Address}/{Station}")
 				.buildAndExpand(addedFireStation.getAddress(), addedFireStation.getStation()).toUri();
-		logger.info("Post OK");
+		logger.info("The firestation is created successfully");
 		return ResponseEntity.created(location).build();
 	}
 
@@ -65,12 +52,13 @@ public class FireStationController {
 			@PathVariable("Address") String address) {
 		FireStation updatedFireStation = fireStationService.updateFireStation(f);
 		if (updatedFireStation != null) {
-			logger.info("Put OK");
+			logger.info("Person is updated successfully");
 
 			return ResponseEntity.ok(updatedFireStation);
 		} else {
-			logger.error("No update");
-			return ResponseEntity.notFound().build();
+			logger.error("Failed update ");
+			throw new NotFoundException("FireStation with address=" + address + " does not exist.");
+
 		}
 	}
 
@@ -81,13 +69,12 @@ public class FireStationController {
 		Map<String, Boolean> response = new HashMap<>();
 		if (deletedFiresStation != null) {
 			response.put("deleted", Boolean.TRUE);
-			logger.info("Successful deletion");
+			logger.info("FireStation is deleted successfully");
 			return response;
 		} else {
-			logger.error("Deletion failed");
-			ResponseEntity.notFound().build();
-			response.put("deleted", Boolean.FALSE);
-			return response;
+			logger.error("Failed Deletion ");
+			throw new NotFoundException("FireStation  with address=" + address + " does not exist.");
+
 		}
 	}
 

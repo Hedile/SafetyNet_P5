@@ -1,9 +1,11 @@
 package com.openclassrooms.safetynetalertsP5;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,14 +21,28 @@ import com.openclassrooms.safetynetalertsP5.model.Person;
 @Component
 public class LoadDataJSON {
 
-	public static ArrayList<Person> listPersons = new ArrayList<Person>();
-	public static List<FireStation> listFirestations = new ArrayList<FireStation>();
-	public static List<MedicalRecord> listMedicalrecords = new ArrayList<MedicalRecord>();
+	public static final ArrayList<Person> listPersons = new ArrayList<Person>();
+	public static final List<FireStation> listFirestations = new ArrayList<FireStation>();
+	public static final List<MedicalRecord> listMedicalrecords = new ArrayList<MedicalRecord>();
 	private static final Logger logger = LogManager.getLogger("LoadDataJSON");
 
-	private static JSONObject loadJsonFile() {
+	public LoadDataJSON() {
+		super();
 
-		String url = "C:\\Users\\chedi\\Desktop\\openclassrooms\\safetynetalertsP5\\src\\main\\resources\\data.json";
+	}
+
+	private static JSONObject loadJsonFile() throws Exception {
+		Properties prop = new Properties();
+		FileInputStream input = new FileInputStream("src\\main\\resources\\application.properties");
+		try {
+			prop.load(input);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			input.close();
+		}
+		String url = prop.getProperty("url");
+
 		try {
 
 			JSONParser jsonParser = new JSONParser();
@@ -43,7 +59,7 @@ public class LoadDataJSON {
 		return null;
 	}
 
-	public static void loadData() {
+	public static void loadData() throws Exception {
 		JSONObject jsonObject = loadJsonFile();
 		JSONArray jsonArrayPersons = (JSONArray) jsonObject.get("persons");
 
