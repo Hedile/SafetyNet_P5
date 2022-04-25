@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import com.openclassrooms.safetynetalertsP5.LoadDataJSON;
 import com.openclassrooms.safetynetalertsP5.SaveDataJSON;
-import com.openclassrooms.safetynetalertsP5.exceptions.MedicalRecordNotFoundException;
 import com.openclassrooms.safetynetalertsP5.model.MedicalRecord;
 
 @Repository
@@ -21,36 +20,39 @@ public class MedicalRecordRepository {
 
 	/** Endpoint de POST /medicalRecord **/
 	public MedicalRecord save(MedicalRecord medicalrecordToAdd) {
-		try {
-			MedicalRecord medicalrecord = findByFirstNameAndLastName(medicalrecordToAdd.getFirstName(),
-					medicalrecordToAdd.getLastName());
-			logger.error("A medical record already exists with firstname ={} and lastname = {} ",
-					medicalrecord.getFirstName(), medicalrecord.getLastName());
-			return null;
-		} catch (MedicalRecordNotFoundException e) {
+
+		MedicalRecord medicalrecord = findByFirstNameAndLastName(medicalrecordToAdd.getFirstName(),
+				medicalrecordToAdd.getLastName());
+		if (medicalrecord == null) {
 			LoadDataJSON.listMedicalrecords.add(medicalrecordToAdd);
 			saveDataJSON.saveData();
-			logger.info("Medical record created: firstname ={} and lastname = {}", medicalrecordToAdd.getFirstName(),
+			logger.info("MedicalRecord created: {}  {}", medicalrecordToAdd.getFirstName(),
 					medicalrecordToAdd.getLastName());
 			return medicalrecordToAdd;
+
+		} else {
+			logger.error("A medicalRecord already exists with firstname ={} and lastname = {} ",
+					medicalrecord.getFirstName(), medicalrecord.getLastName());
+			return null;
 		}
 	}
 
 	/** Endpoint de PUT /medicalRecord **/
 	public MedicalRecord updateByFirstNameAndLastName(MedicalRecord medicalrecordToUpdate) {
-		try {
-			MedicalRecord medicalrecord = findByFirstNameAndLastName(medicalrecordToUpdate.getFirstName(),
-					medicalrecordToUpdate.getLastName());
+
+		MedicalRecord medicalrecord = findByFirstNameAndLastName(medicalrecordToUpdate.getFirstName(),
+				medicalrecordToUpdate.getLastName());
+		if (medicalrecord != null) {
 			medicalrecord.setBirthdate(medicalrecordToUpdate.getBirthdate());
 			medicalrecord.setMedications(medicalrecordToUpdate.getMedications());
 			medicalrecord.setAllergies(medicalrecordToUpdate.getAllergies());
-			logger.info("Medical record updated: firstname ={} and lastname = {}", medicalrecordToUpdate.getFirstName(),
-					medicalrecordToUpdate.getLastName());
 			saveDataJSON.saveData();
+			logger.info("MedicalRecord updated: {} {}", medicalrecordToUpdate.getFirstName(),
+					medicalrecordToUpdate.getLastName());
 			return medicalrecord;
-		} catch (MedicalRecordNotFoundException e) {
-			logger.error("A medical record with firstname ={} and lastname = {} not found ",
-					medicalrecordToUpdate.getFirstName(), medicalrecordToUpdate.getLastName());
+		} else {
+			logger.error("Failed to find medicalRecord: {}  {}", medicalrecordToUpdate.getFirstName(),
+					medicalrecordToUpdate.getLastName());
 			return null;
 		}
 
@@ -58,15 +60,15 @@ public class MedicalRecordRepository {
 
 	/** Endpoint de DELETE /medicalRecord **/
 	public MedicalRecord deleteByFirstNameAndLastName(String fn, String ln) {
-		try {
-			MedicalRecord medicalrecordToDelete = findByFirstNameAndLastName(fn, ln);
+		MedicalRecord medicalrecordToDelete = findByFirstNameAndLastName(fn, ln);
+		if (medicalrecordToDelete != null) {
 			LoadDataJSON.listMedicalrecords.remove(medicalrecordToDelete);
 			saveDataJSON.saveData();
-			logger.info("Medical record deleted: firstname ={} and lastname = {}", medicalrecordToDelete.getFirstName(),
+			logger.info("MedicalRecord deleted: {}  {}", medicalrecordToDelete.getFirstName(),
 					medicalrecordToDelete.getLastName());
 			return medicalrecordToDelete;
-		} catch (MedicalRecordNotFoundException e) {
-			logger.error("A medical record with firstname ={} and lastname = {} not found ", fn, ln);
+		} else {
+			logger.error("Failed to find medicalRecord: {}  {}  ", fn, ln);
 			return null;
 		}
 	}
@@ -78,19 +80,15 @@ public class MedicalRecordRepository {
 
 	/** Find medical records by firstname and lastname */
 	public MedicalRecord findByFirstNameAndLastName(String fn, String ln) {
-		MedicalRecord medicalRecordFound = null;
+
 		for (MedicalRecord m : LoadDataJSON.listMedicalrecords) {
 			if (m.getFirstName().equals(fn) && m.getLastName().equals(ln)) {
-				logger.info("Medical record found: firstname ={} and lastname = {}", fn, ln);
-				medicalRecordFound = m;
+				logger.info("MedicalRecord found: {}  {}", fn, ln);
+				return m;
 			}
 		}
-		if (medicalRecordFound != null) {
-			logger.info("Person found: firstname ={} and lastename = {} ", fn, ln);
-			return medicalRecordFound;
-		} else {
-			throw new MedicalRecordNotFoundException(
-					"medicalRecord not found with firstname= " + fn + " and lastName=" + ln);
-		}
+
+		logger.error("MedicalRecord not found: {} {} ", fn, ln);
+		return null;
 	}
 }

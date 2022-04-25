@@ -4,14 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class FireStationNotFoundException extends RuntimeException {
-
-	/**
-	 * 
-	 */
-	public FireStationNotFoundException(String s) {
+public class NotFoundException extends RuntimeException {
+	public NotFoundException(String s) {
 		super(s);
-
 	}
-
 }

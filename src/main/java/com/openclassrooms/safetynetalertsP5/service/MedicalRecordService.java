@@ -19,6 +19,7 @@ public class MedicalRecordService {
 
 	}
 
+	/** Endpoint de PUT /medicalRecord **/
 	public MedicalRecord updateMedicalRecord(MedicalRecord medicalrecord) {
 		return medicalrecordRepository.updateByFirstNameAndLastName(medicalrecord);
 
@@ -34,10 +35,12 @@ public class MedicalRecordService {
 
 	}
 
+	/** Endpoint de GET /medicalRecord **/
 	public List<MedicalRecord> getAllMedicalRecords() {
 		return medicalrecordRepository.findAll();
 	}
 
+	/** Endpoint de GET /medicalRecord **/
 	public MedicalRecord getMedicalRecord(String fn, String ln) {
 		return medicalrecordRepository.findByFirstNameAndLastName(fn, ln);
 	}

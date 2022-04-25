@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.openclassrooms.safetynetalertsP5.exceptions.NotFoundException;
 import com.openclassrooms.safetynetalertsP5.model.Person;
 import com.openclassrooms.safetynetalertsP5.service.PersonService;
 
@@ -30,24 +30,25 @@ import com.openclassrooms.safetynetalertsP5.service.PersonService;
 public class PersonController {
 	@Autowired
 	private PersonService personService;
+
 	private static final Logger logger = LogManager.getLogger("PersonController");
 
-	public PersonController(PersonService personService) {
-		this.personService = personService;
+	public PersonController() {
+		super();
 	}
 
 	/** Endpoint Get /person **/
 	@GetMapping("/Persons")
-	public List<Person> getAllPersons() {
+	public ResponseEntity<List<Person>> getAllPersons() {
 		logger.info("Get/Persons");
 
 		List<Person> persons = personService.getAllPersons();
 		if (persons != null) {
 			logger.info("Get ok");
-			return persons;
+			return ResponseEntity.ok().body(persons);
 		} else {
 			logger.error("Persons Not found");
-			return null;
+			throw new NotFoundException("Persons Not found");
 		}
 	}
 
@@ -60,7 +61,7 @@ public class PersonController {
 			return ResponseEntity.ok().body(person);
 		} else {
 			logger.error("Person Not found");
-			return ResponseEntity.notFound().build();
+			throw new NotFoundException("Person with firstname= " + fn + " and lastName=" + ln + " does not exist.");
 		}
 
 	}
@@ -70,15 +71,16 @@ public class PersonController {
 	 */
 	@PostMapping(value = "/Persons")
 	public ResponseEntity<Person> createPerson(@RequestBody Person person) {
+
 		Person addedPerson = personService.addPerson(person);
-		if (Objects.isNull(addedPerson)) {
-			logger.error("Person is not created");
+		if (addedPerson == null) {
+			logger.error("Failed create person");
 			return ResponseEntity.noContent().build();
 		}
 
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{FirstName}/{LastName}")
 				.buildAndExpand(addedPerson.getFirstName(), addedPerson.getLastName()).toUri();
-		logger.info("Post OK");
+		logger.info("The person is created successfully");
 		return ResponseEntity.created(location).build();
 
 	}
@@ -92,14 +94,16 @@ public class PersonController {
 	@PutMapping(value = "/Persons")
 	public ResponseEntity<Person> updatePerson(@RequestBody Person p, @RequestParam("FirstName") String fn,
 			@RequestParam("LastName") String ln) {
+
 		Person updatedPerson = personService.updatePerson(p);
 		if (updatedPerson != null) {
-			logger.info("Put OK");
+			logger.info("Person is updated successfully");
 
 			return ResponseEntity.ok(updatedPerson);
 		} else {
-			logger.error("No update");
-			return ResponseEntity.notFound().build();
+			logger.error("Failed update person ");
+			throw new NotFoundException("Person with firstname= " + fn + " and lastName=" + ln + " does not exist.");
+
 		}
 
 	}
@@ -114,14 +118,12 @@ public class PersonController {
 		Map<String, Boolean> response = new HashMap<>();
 		if (deletedPerson != null) {
 			response.put("deleted", Boolean.TRUE);
-			logger.info("Successful deletion");
+			logger.info("Person is deleted successfully");
 			return response;
 		} else {
-			logger.error("Deletion failed");
-			ResponseEntity.notFound().build();
-			response.put("deleted", Boolean.FALSE);
-			return response;
-		}
+			logger.error("Failed delete person ");
+			throw new NotFoundException("Person with firstname= " + fn + " and lastName=" + ln + " does not exist.");
 
+		}
 	}
 }

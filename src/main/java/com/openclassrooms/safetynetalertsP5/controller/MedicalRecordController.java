@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.openclassrooms.safetynetalertsP5.exceptions.NotFoundException;
 import com.openclassrooms.safetynetalertsP5.model.MedicalRecord;
 import com.openclassrooms.safetynetalertsP5.service.MedicalRecordService;
 
@@ -36,15 +36,15 @@ public class MedicalRecordController {
 
 	/** Endpoint Get /medicalrecord **/
 	@GetMapping("/medicalrecords")
-	public List<MedicalRecord> getAllMedicalRecords() {
+	public ResponseEntity<List<MedicalRecord>> getAllMedicalRecords() {
 		logger.info("Get/medicalrecords");
 		List<MedicalRecord> medicalRecords = medicalrecordService.getAllMedicalRecords();
 		if (medicalRecords != null) {
 			logger.info("Get ok");
-			return medicalRecords;
+			return ResponseEntity.ok().body(medicalRecords);
 		} else {
 			logger.error("MedicalRecords Not found");
-			return null;
+			throw new NotFoundException("MedicalRecords Not found");
 		}
 	}
 
@@ -57,7 +57,9 @@ public class MedicalRecordController {
 			return ResponseEntity.ok().body(medicalRecord);
 		} else {
 			logger.error("MedicalRecord Not found");
-			return ResponseEntity.notFound().build();
+			throw new NotFoundException(
+					"MedicalRecord with firstname= " + fn + " and lastName=" + ln + " does not exist.");
+
 		}
 
 	}
@@ -66,13 +68,13 @@ public class MedicalRecordController {
 	@PostMapping(value = "/medicalrecords")
 	public ResponseEntity<MedicalRecord> createMedicalRecord(@RequestBody MedicalRecord medicalrecord) {
 		MedicalRecord addedMedicalRecord = medicalrecordService.addMedicalRecord(medicalrecord);
-		if (Objects.isNull(addedMedicalRecord)) {
-			logger.error("Medical record is not created");
+		if (addedMedicalRecord == null) {
+			logger.error("Failed create MedicalRecord ");
 			return ResponseEntity.noContent().build();
 		}
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{FirstName}/{LastName}")
 				.buildAndExpand(addedMedicalRecord.getFirstName(), addedMedicalRecord.getLastName()).toUri();
-		logger.info("Post OK");
+		logger.info("The medicalRecord is created successfully");
 		return ResponseEntity.created(location).build();
 
 	}
@@ -84,12 +86,14 @@ public class MedicalRecordController {
 			@RequestParam("FirstName") String fn, @RequestParam("LastName") String ln) {
 		MedicalRecord updatedMedicalRecord = medicalrecordService.updateMedicalRecord(m);
 		if (updatedMedicalRecord != null) {
-			logger.info("Put OK");
+			logger.info("The medicalRecord is updated successfully");
 
 			return ResponseEntity.ok(updatedMedicalRecord);
 		} else {
-			logger.error("No update");
-			return ResponseEntity.notFound().build();
+			logger.error("Failed update MedicalRecord");
+			throw new NotFoundException(
+					"MedicalRecord with firstname= " + fn + " and lastName=" + ln + " does not exist.");
+
 		}
 	}
 
@@ -101,13 +105,12 @@ public class MedicalRecordController {
 		Map<String, Boolean> response = new HashMap<>();
 		if (deletedMedicalRecord != null) {
 			response.put("deleted", Boolean.TRUE);
-			logger.info("Successful deletion");
+			logger.info("The medicalRecord is deleted successfully");
 			return response;
 		} else {
-			logger.error("Deletion failed");
-			ResponseEntity.notFound().build();
-			response.put("deleted", Boolean.FALSE);
-			return response;
+			logger.error("Failed delete medicalRecord ");
+			throw new NotFoundException(
+					"MedicalRecord with firstname= " + fn + " and lastName=" + ln + " does not exist.");
 		}
 	}
 

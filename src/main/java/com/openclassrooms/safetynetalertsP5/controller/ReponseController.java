@@ -15,6 +15,7 @@ import com.openclassrooms.safetynetalertsP5.dto.Family;
 import com.openclassrooms.safetynetalertsP5.dto.PersonInfo;
 import com.openclassrooms.safetynetalertsP5.dto.PersonsByStationNumber;
 import com.openclassrooms.safetynetalertsP5.dto.PersonsServedByFireStation;
+import com.openclassrooms.safetynetalertsP5.exceptions.NotFoundException;
 import com.openclassrooms.safetynetalertsP5.service.ReponseService;
 
 @RestController
@@ -34,29 +35,29 @@ public class ReponseController {
 			return ResponseEntity.ok().body(persons);
 		} else {
 			logger.error("Persons Not found");
-			return ResponseEntity.notFound().build();
+			throw new NotFoundException("No people covered by the fireStation n°:" + station_number);
 		}
 	}
 
 	/** Endpoint de childAlert?address=<address> **/
 
-	@GetMapping(value = "childAlert")
+	@GetMapping(value = "/childAlert")
 	public ResponseEntity<Children> childrenByAddress(@RequestParam("address") String address) {
 
-		Children children = reponseService.childrenByAddressAnotherMethod(address);
+		Children children = reponseService.childrenByAddress(address);
 		if (children != null) {
 			logger.info("Get ok");
 			return ResponseEntity.ok().body(children);
 		} else {
 			logger.error("children Not found");
-			return ResponseEntity.notFound().build();
+			throw new NotFoundException("no children at this address:" + address);
 		}
 
 	}
 
 	/** Endpoint de phoneAlert?firestation=<firestation_number> **/
 
-	@GetMapping(value = "phoneAlert")
+	@GetMapping(value = "/phoneAlert")
 	public ResponseEntity<List<String>> phoneByStation(@RequestParam("station") String stationNbr) {
 
 		List<String> phoneNumber = reponseService.getPhoneNumberByStation(stationNbr);
@@ -65,14 +66,14 @@ public class ReponseController {
 			return ResponseEntity.ok().body(phoneNumber);
 		} else {
 			logger.error("Phone number Not found");
-			return ResponseEntity.notFound().build();
+			throw new NotFoundException("Phone number Not found");
 		}
 
 	}
 
 	/** Endpoint de fire?address=<address> **/
 
-	@GetMapping(value = "fire")
+	@GetMapping(value = "/fire")
 	public ResponseEntity<PersonsServedByFireStation> personInfoByAddress(@RequestParam("address") String address) {
 
 		PersonsServedByFireStation personsServedByFireStation = reponseService.getPersonInfoByAddress(address);
@@ -88,46 +89,46 @@ public class ReponseController {
 	/** Endpoint de flood/stations?stations=<a list of station_number> **/
 
 	@GetMapping(value = "/flood/stations")
-	public List<Family> familiesByStationNumbers(@RequestParam("stations") List<String> stations) {
+	public ResponseEntity<List<Family>> familiesByStationNumbers(@RequestParam("stations") List<String> stations) {
 
 		List<Family> families = reponseService.getFamiliesByStationNumbers(stations);
 		if (families != null) {
 			logger.info("Get ok");
-			return families;
+			return ResponseEntity.ok().body(families);
 		} else {
 			logger.error("families Not found");
-			return null;
+			throw new NotFoundException("Families Not found");
 		}
 	}
 
 	/** Endpont de personInfo?firstName=<firstName>&lastName=<lastName> **/
 
-	@GetMapping(value = "personInfo")
-	public List<PersonInfo> personsInfoByName(@RequestParam("firstName") String firstName,
+	@GetMapping(value = "/personInfo")
+	public ResponseEntity<List<PersonInfo>> personsInfoByName(@RequestParam("firstName") String firstName,
 			@RequestParam("lastName") String lastName) {
 
-		List<PersonInfo> personInfos = reponseService.getPersonsInfoByName(firstName, lastName);
-		if (personInfos != null) {
+		List<PersonInfo> personInfoList = reponseService.getPersonsInfoByName(firstName, lastName);
+		if (personInfoList != null) {
 			logger.info("Get ok");
-			return personInfos;
+			return ResponseEntity.ok().body(personInfoList);
 		} else {
 			logger.error("personInfos Not found");
-			return null;
+			throw new NotFoundException("personInfos Not found");
 		}
 	}
 
 	/** Endpoint de communityEmail?city=<city> **/
 
-	@GetMapping(value = "communityEmail")
-	public List<String> emailsByCity(@RequestParam("city") String city) {
+	@GetMapping(value = "/communityEmail")
+	public ResponseEntity<List<String>> emailsByCity(@RequestParam("city") String city) {
 
 		List<String> emails = reponseService.getEmailsByCity(city);
 		if (emails != null) {
 			logger.info("Get ok");
-			return emails;
+			return ResponseEntity.ok().body(emails);
 		} else {
 			logger.error("emails Not found");
-			return null;
+			throw new NotFoundException("Emails Not found");
 		}
 	}
 }
