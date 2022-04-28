@@ -38,7 +38,7 @@ public class MedicalRecordRepository {
 	}
 
 	/** Endpoint de PUT /medicalRecord **/
-	public MedicalRecord updateByFirstNameAndLastName(MedicalRecord medicalrecordToUpdate) {
+	public MedicalRecord updateMedicalRecordByFirstNameAndLastName(MedicalRecord medicalrecordToUpdate) {
 
 		MedicalRecord medicalrecord = findByFirstNameAndLastName(medicalrecordToUpdate.getFirstName(),
 				medicalrecordToUpdate.getLastName());
@@ -59,7 +59,7 @@ public class MedicalRecordRepository {
 	}
 
 	/** Endpoint de DELETE /medicalRecord **/
-	public MedicalRecord deleteByFirstNameAndLastName(String fn, String ln) {
+	public MedicalRecord deleteMedicalRecordByFirstNameAndLastName(String fn, String ln) {
 		MedicalRecord medicalrecordToDelete = findByFirstNameAndLastName(fn, ln);
 		if (medicalrecordToDelete != null) {
 			LoadDataJSON.listMedicalrecords.remove(medicalrecordToDelete);

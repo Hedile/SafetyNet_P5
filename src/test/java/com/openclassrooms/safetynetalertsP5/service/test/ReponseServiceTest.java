@@ -8,14 +8,12 @@ import static org.mockito.Mockito.verify;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.openclassrooms.safetynetalertsP5.dto.PersonInfoGeneral;
 import com.openclassrooms.safetynetalertsP5.dto.PersonsByStationNumber;
@@ -23,7 +21,6 @@ import com.openclassrooms.safetynetalertsP5.model.FireStation;
 import com.openclassrooms.safetynetalertsP5.repository.ReponseRepository;
 import com.openclassrooms.safetynetalertsP5.service.ReponseService;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(ReponseService.class)
 @AutoConfigureMockMvc
 public class ReponseServiceTest {

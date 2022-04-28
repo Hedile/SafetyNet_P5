@@ -28,13 +28,18 @@ public class ReponseRepository {
 
 	private static final Logger logger = LogManager.getLogger("ReponseRepository");
 
-	/** Endpoint de firestation?stationNumber=<station_number **/
+	public ReponseRepository() {
+		super();
+
+	}
+
+	/** Endpoint de firestation?stationNumber=<station_number */
 	public PersonsByStationNumber listPersonsByStationNumber(String station_number) {
 		logger.debug("find peopole by station number :{}", station_number);
 		List<PersonInfoGeneral> listPersons = new ArrayList<PersonInfoGeneral>();
 		int adultsNbr = 0;
 		int childrenNbr = 0;
-		List<String> address = addressByNumberStation(station_number);
+		List<String> address = findAddressByNumberStation(station_number);
 		for (Person p : LoadDataJSON.listPersons) {
 			for (String add : address) {
 				if (p.getAddress().equals(add)) {
@@ -60,7 +65,7 @@ public class ReponseRepository {
 		return personsByStationNumber;
 	}
 
-	/** Endpoint de childAlert?address=<address> **/
+	/** Endpoint de childAlert?address=<address> */
 	public Children childrenByAddress(String address) {
 		logger.debug("find children by address :{}", address);
 		List<Child> childrenByAddress = new ArrayList<Child>();
@@ -84,7 +89,7 @@ public class ReponseRepository {
 		return children;
 	}
 
-	/** Endpoint de phoneAlert?firestation=<firestation_number> **/
+	/** Endpoint de phoneAlert?firestation=<firestation_number> */
 	public List<String> findPhoneNumberByStation(String stationNbr) {
 		logger.debug("find phone number by station  :{}", stationNbr);
 		List<String> phoneAlert = new ArrayList<String>();
@@ -137,7 +142,7 @@ public class ReponseRepository {
 		logger.debug("find families by stationNumbers:{}", stationNbrs);
 		List<Family> families = new ArrayList<Family>();
 		for (String nbr : stationNbrs) {
-			List<String> address = addressByNumberStation(nbr);
+			List<String> address = findAddressByNumberStation(nbr);
 			for (String add : address) {
 
 				List<PersonInfoMedical> persons = findPersonInfoMedicalByAddress(add);
@@ -152,9 +157,7 @@ public class ReponseRepository {
 
 	/**
 	 * Endpoint de personInfo?firstName=<firstName>&lastName=<lastName>
-	 * 
-	 * @return
-	 **/
+	 */
 	public List<PersonInfo> findPersonsInfoByName(String firstName, String lastName) {
 		logger.debug("find PersonsInfo by Name:{} {}", firstName, lastName);
 		List<PersonInfo> listPersonInfo = new ArrayList<PersonInfo>();
@@ -180,7 +183,7 @@ public class ReponseRepository {
 
 	}
 
-	/** Endpoint de communityEmail?city=<city> **/
+	/** Endpoint de communityEmail?city=<city> */
 	public List<String> findEmailsByCity(String city) {
 		logger.debug("find Emails by City {}", city);
 		List<String> listEmails = new ArrayList<String>();
@@ -193,7 +196,7 @@ public class ReponseRepository {
 	}
 
 	/** calculer l'age d'une personne */
-	private int agePerson(String birthDateStr) {
+	public int agePerson(String birthDateStr) {
 		logger.debug("Calculate the age of person: {} ", birthDateStr);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 		int age = 0;
@@ -205,7 +208,7 @@ public class ReponseRepository {
 	}
 
 	/** Chercher une liste d'adresse par rapport au numéro de station */
-	private List<String> addressByNumberStation(String station_number) {
+	public List<String> findAddressByNumberStation(String station_number) {
 		logger.debug("find a list of addresses by this station number :{}", station_number);
 		List<String> addressByNumberSt = new ArrayList<String>();
 		for (FireStation f : LoadDataJSON.listFirestations) {
@@ -220,49 +223,52 @@ public class ReponseRepository {
 	}
 
 	/** Chercher le numéro de caserne en fonction de l'adresse */
-	private String findStationNumberByAddress(String address) {
+	public String findStationNumberByAddress(String address) {
 		logger.debug("find a sattion number by address:{}", address);
 		String stationNumber = null;
 		for (FireStation f : LoadDataJSON.listFirestations) {
 			if (f.getAddress().equals(address)) {
 				stationNumber = f.getStation();
+				logger.info("station number found = {}", stationNumber);
 			}
 		}
-		logger.info("station number found = {}", stationNumber);
+		logger.error("station number not found ");
 		return stationNumber;
 	}
 
 	/** Chercher une liste de personne par rapport au numéro de station */
-	private List<Person> findPersonsByNumberStation(String station_number) {
+	public List<Person> findPersonsByNumberStation(String station_number) {
 		logger.debug("find people by station number:{}", station_number);
 		List<Person> persons = new ArrayList<Person>();
-		List<String> address = addressByNumberStation(station_number);
+		List<String> address = findAddressByNumberStation(station_number);
 		for (Person p : LoadDataJSON.listPersons) {
 			for (String add : address) {
 				if (p.getAddress().equals(add)) {
 					persons.add(p);
+					logger.info("People found ");
 				}
 			}
 		}
-		logger.info("People found ");
+		logger.error("People not found ");
 		return persons;
 	}
 
 	/** Chercher une liste de personne par rapport à une adresse */
-	private List<Person> findPersonsByAddress(String address) {
+	public List<Person> findPersonsByAddress(String address) {
 		logger.debug("find people by address:{}", address);
 		List<Person> persons = new ArrayList<Person>();
 		for (Person p : LoadDataJSON.listPersons) {
 			if (p.getAddress().equals(address)) {
 				persons.add(p);
+				logger.info("People found ");
 			}
 		}
-		logger.info("People found ");
+		logger.error("People not found ");
 		return persons;
 	}
 
 	/** Chercher une liste des membres du foyer d'une personne */
-	private List<Person> findFamilyMembers(String firstName, String lastName) {
+	public List<Person> findFamilyMembers(String firstName, String lastName) {
 		logger.debug("find the child's family members:{} {}", firstName, lastName);
 		List<Person> family = new ArrayList<Person>();
 		for (Person p : LoadDataJSON.listPersons) {
@@ -271,9 +277,10 @@ public class ReponseRepository {
 			}
 			if (p.getFirstName().equals(firstName) || p.getLastName().equals(lastName)) {
 				family.add(p);
+				logger.info("Family found");
 			}
 		}
-		logger.info("Family found");
+		logger.error("Family not found");
 		return family;
 	}
 

@@ -11,9 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,7 +30,6 @@ import com.openclassrooms.safetynetalertsP5.exceptions.NotFoundException;
 import com.openclassrooms.safetynetalertsP5.model.Person;
 import com.openclassrooms.safetynetalertsP5.service.PersonService;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(PersonController.class)
 @AutoConfigureMockMvc
 public class PersonControllerTest {
@@ -45,7 +42,7 @@ public class PersonControllerTest {
 	private ObjectMapper mapper;
 	private Person person;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		person = new Person("Jules", "Dupont", "st Germain", "paris", "97451", "0666777", "jules@email.com");
 		mapper = new ObjectMapper();
@@ -63,9 +60,6 @@ public class PersonControllerTest {
 		// When
 		MvcResult mvcResult = mockMvc.perform(get("/Persons").contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andReturn();
-		// .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(3)))
-		// .andExpect(MockMvcResultMatchers.jsonPath("$[2].name", is("Jane")));
-
 		String content = mvcResult.getResponse().getContentAsString();
 		Person[] personlist = mapper.readValue(content, Person[].class);
 		assertTrue(personlist.length == 3);
@@ -145,8 +139,6 @@ public class PersonControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_VALUE).content(inputJson).characterEncoding("utf-8")
 				.accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().string(inputJson));
 
-		// .andExpect(MockMvcResultMatchers.jsonPath("$", notNullValue()))
-		// .andExpect(MockMvcResultMatchers.jsonPath("$.name", is("Jules")));
 	}
 
 	@Test

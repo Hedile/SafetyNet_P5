@@ -8,21 +8,18 @@ import static org.mockito.Mockito.verify;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.openclassrooms.safetynetalertsP5.model.Person;
 import com.openclassrooms.safetynetalertsP5.repository.PersonRepository;
 import com.openclassrooms.safetynetalertsP5.service.PersonService;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(PersonService.class)
 @AutoConfigureMockMvc
 public class PersonServiceTest {
@@ -32,7 +29,7 @@ public class PersonServiceTest {
 	private PersonRepository personRepository;
 	private Person person;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		person = new Person();
 		person.setFirstName("Jules");
@@ -56,7 +53,7 @@ public class PersonServiceTest {
 	}
 
 	@Test
-	public void testFindPersonFirstNameAndLastName() {
+	public void testFindPersonByFirstNameAndLastName() {
 
 		Mockito.when(personRepository.findPersonByFirstNameAndLastName(person.getFirstName(), person.getLastName()))
 				.thenReturn((person));

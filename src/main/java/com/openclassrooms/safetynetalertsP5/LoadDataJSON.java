@@ -21,9 +21,9 @@ import com.openclassrooms.safetynetalertsP5.model.Person;
 @Component
 public class LoadDataJSON {
 
-	public static final ArrayList<Person> listPersons = new ArrayList<Person>();
-	public static final List<FireStation> listFirestations = new ArrayList<FireStation>();
-	public static final List<MedicalRecord> listMedicalrecords = new ArrayList<MedicalRecord>();
+	public static ArrayList<Person> listPersons = new ArrayList<Person>();
+	public static ArrayList<FireStation> listFirestations = new ArrayList<FireStation>();
+	public static ArrayList<MedicalRecord> listMedicalrecords = new ArrayList<MedicalRecord>();
 	private static final Logger logger = LogManager.getLogger("LoadDataJSON");
 
 	public LoadDataJSON() {
