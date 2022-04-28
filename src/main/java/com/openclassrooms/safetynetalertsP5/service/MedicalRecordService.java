@@ -21,17 +21,15 @@ public class MedicalRecordService {
 
 	/** Endpoint de PUT /medicalRecord **/
 	public MedicalRecord updateMedicalRecord(MedicalRecord medicalrecord) {
-		return medicalrecordRepository.updateByFirstNameAndLastName(medicalrecord);
+		return medicalrecordRepository.updateMedicalRecordByFirstNameAndLastName(medicalrecord);
 
 	}
 
 	/**
 	 * Endpoint de DELETE /medicalRecord
-	 * 
-	 * @return
-	 **/
+	 */
 	public MedicalRecord deleteMedicalRecord(String fn, String ln) {
-		return medicalrecordRepository.deleteByFirstNameAndLastName(fn, ln);
+		return medicalrecordRepository.deleteMedicalRecordByFirstNameAndLastName(fn, ln);
 
 	}
 

@@ -8,16 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -36,7 +34,6 @@ import com.openclassrooms.safetynetalertsP5.model.FireStation;
 import com.openclassrooms.safetynetalertsP5.model.Person;
 import com.openclassrooms.safetynetalertsP5.service.ReponseService;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(ReponseController.class)
 @AutoConfigureMockMvc
 public class ReponseControllerTest {
@@ -49,7 +46,7 @@ public class ReponseControllerTest {
 	private ObjectMapper mapper;
 	FireStation firestation = new FireStation("St_Germain", "5");
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 
 		mapper = new ObjectMapper();
@@ -140,8 +137,7 @@ public class ReponseControllerTest {
 
 	}
 
-	/** Endpoint de fire?address=<address> **/
-
+	/** Endpoint de fire?address=<address> */
 	@Test
 	public void testGetPersonsServedByFireStationAddress_success() throws Exception {
 		List<String> medications = Arrays.asList("aznol:350mg", "doliprane:1000mg");
