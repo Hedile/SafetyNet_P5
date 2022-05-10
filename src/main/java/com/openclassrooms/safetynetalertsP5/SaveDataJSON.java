@@ -1,5 +1,6 @@
 package com.openclassrooms.safetynetalertsP5;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -53,10 +54,11 @@ public class SaveDataJSON {
 		obj.put("persons", jsonArrayPersons);
 		obj.put("firestations", jsonArrayFireStations);
 		obj.put("medicalrecords", jsonArrayMedicalRecords);
+		String fileName = "src/main/resources/data.json";
+		File fw = new File(fileName);
 		try {
-			FileWriter file = new FileWriter(
-					"C:\\Users\\chedi\\Desktop\\openclassrooms\\safetynetalertsP5\\src\\main\\resources\\data.json",
-					false);
+			FileWriter file = new FileWriter(fw);
+
 			file.write(obj.toJSONString());
 
 			file.close();

@@ -1,11 +1,9 @@
 package com.openclassrooms.safetynetalertsP5;
 
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +11,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ResourceUtils;
 
 import com.openclassrooms.safetynetalertsP5.model.FireStation;
 import com.openclassrooms.safetynetalertsP5.model.MedicalRecord;
@@ -32,22 +31,14 @@ public class LoadDataJSON {
 	}
 
 	private static JSONObject loadJsonFile() throws Exception {
-		Properties prop = new Properties();
-		FileInputStream input = new FileInputStream("src\\main\\resources\\application.properties");
-		try {
-			prop.load(input);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			input.close();
-		}
-		String url = prop.getProperty("url");
 
+		File file = ResourceUtils.getFile("classpath:data.json");
+
+		String fileContent = new String(Files.readAllBytes(file.toPath()));
 		try {
 
 			JSONParser jsonParser = new JSONParser();
-			Reader reader = new FileReader(url);
-			JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
+			JSONObject jsonObject = (JSONObject) jsonParser.parse(fileContent);
 			logger.debug("loadJsonFile success");
 			return jsonObject;
 		} catch (Exception e) {
